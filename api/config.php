@@ -21,7 +21,7 @@ define('MAIL_TO', 'alfred@celltonispharma.uk');
 // Sender identity used in the From header. For best deliverability with
 // one.com, this should be a mailbox or alias on a domain hosted in the
 // same one.com account, e.g. no-reply@celltonispharma.uk.
-define('MAIL_FROM', 'no-reply@celltonispharma.uk');
+define('MAIL_FROM', 'contact@celltonispharma.uk');
 define('MAIL_FROM_NAME', 'CellTonis Pharma Website');
 
 // Sending method:
