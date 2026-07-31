@@ -48,19 +48,38 @@ function encode_subject(string $subject): string
 }
 
 /**
- * Send via PHP's built-in mail(). Returns true on success.
+ * Send via PHP's built-in mail(). Returns an array with 'ok' (bool) and,
+ * when it fails, an 'error' string with whatever PHP itself reported —
+ * this is what makes failures debuggable instead of a bare false.
+ *
+ * Deliberately does NOT pass mail()'s 5th parameter (additional_parameters,
+ * used to set a custom envelope sender via -f). Many shared hosts —
+ * one.com included — restrict or reject that flag outright for security,
+ * which silently makes mail() return false with no indication why. Since
+ * MAIL_FROM is already set correctly in the From: header, the envelope
+ * sender defaults to the hosting account's own mailbox, which is exactly
+ * what a shared host expects and will accept.
  */
-function send_via_builtin_mail(string $to, string $subject, string $body, ?string $replyTo, string $from, string $fromName): bool
+function send_via_builtin_mail(string $to, string $subject, string $body, ?string $replyTo, string $from, string $fromName): array
 {
+    if (!function_exists('mail')) {
+        return ['ok' => false, 'error' => 'The PHP mail() function is not available on this server (disabled or missing).'];
+    }
+
     $headers = build_email_headers_block($fromName, $from, $replyTo);
     $encodedSubject = encode_subject($subject);
 
-    // The 5th parameter sets the envelope sender (-f), which some mail
-    // transports require to match a real, deliverable mailbox to avoid
-    // being rejected as forged.
-    $additionalParams = '-f' . escapeshellarg($from);
+    error_clear_last();
+    $ok = @mail($to, $encodedSubject, $body, $headers);
 
-    return @mail($to, $encodedSubject, $body, $headers, $additionalParams);
+    if ($ok) {
+        return ['ok' => true, 'error' => null];
+    }
+
+    $lastError = error_get_last();
+    $detail = $lastError ? $lastError['message'] : 'mail() returned false with no further detail from PHP.';
+
+    return ['ok' => false, 'error' => $detail];
 }
 
 /**
@@ -209,19 +228,32 @@ class Smtp_Mailer
 /**
  * Send an email using whichever method config.php selects. Returns true
  * on success; throws on hard failure so the caller can distinguish
- * "sent" from "failed" and never show a false success to the user.
+ * "sent" from "failed" and never show a false success to the user. The
+ * exception message always contains the real, specific reason — this is
+ * what gets logged (and, while DEBUG_MODE is on, returned to the caller)
+ * instead of a generic "something went wrong".
  */
 function deliver_email(string $subject, string $body, ?string $replyTo): bool
 {
+    if (!defined('MAIL_TO') || !filter_var(MAIL_TO, FILTER_VALIDATE_EMAIL)) {
+        throw new \RuntimeException('Configuration error: MAIL_TO in api/config.php is missing or not a valid email address.');
+    }
+    if (!defined('MAIL_FROM') || !filter_var(MAIL_FROM, FILTER_VALIDATE_EMAIL)) {
+        throw new \RuntimeException('Configuration error: MAIL_FROM in api/config.php is missing or not a valid email address.');
+    }
+
     if (MAIL_METHOD === 'smtp') {
+        if (SMTP_PASSWORD === '') {
+            throw new \RuntimeException('Configuration error: MAIL_METHOD is "smtp" but SMTP_PASSWORD in api/config.php is empty.');
+        }
         $mailer = new Smtp_Mailer(SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_ENCRYPTION);
         $mailer->send(MAIL_TO, MAIL_FROM, MAIL_FROM_NAME, $replyTo, $subject, $body);
         return true;
     }
 
-    $ok = send_via_builtin_mail(MAIL_TO, $subject, $body, $replyTo, MAIL_FROM, MAIL_FROM_NAME);
-    if (!$ok) {
-        throw new \RuntimeException('mail() returned failure.');
+    $result = send_via_builtin_mail(MAIL_TO, $subject, $body, $replyTo, MAIL_FROM, MAIL_FROM_NAME);
+    if (!$result['ok']) {
+        throw new \RuntimeException('mail() failed: ' . $result['error']);
     }
     return true;
 }

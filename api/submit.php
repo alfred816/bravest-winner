@@ -277,5 +277,12 @@ try {
     respond(200, ['ok' => true]);
 } catch (\Throwable $e) {
     error_log('CellTonis form submission failed: ' . $e->getMessage());
-    respond(502, ['ok' => false, 'error' => 'We could not send your submission. Please try again shortly.']);
+
+    $errorPayload = ['ok' => false, 'error' => 'We could not send your submission. Please try again shortly.'];
+    if (defined('DEBUG_MODE') && DEBUG_MODE) {
+        // Visible only in the raw HTTP response (e.g. browser devtools'
+        // Network tab) — the on-screen message above is unchanged.
+        $errorPayload['debug'] = $e->getMessage();
+    }
+    respond(502, $errorPayload);
 }

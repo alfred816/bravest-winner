@@ -43,3 +43,11 @@ define('SMTP_PORT', 587);           // 587 = STARTTLS, 465 = implicit TLS
 define('SMTP_ENCRYPTION', 'tls');   // 'tls' for port 587, 'ssl' for port 465
 define('SMTP_USERNAME', 'contact@celltonispharma.uk'); // full mailbox address
 define('SMTP_PASSWORD', '');        // the mailbox password — fill in, never commit a real one
+
+// TEMPORARY, for debugging only: when true, a failed submission's JSON
+// response includes a "debug" field with the real underlying error (e.g.
+// exactly why mail() failed). This never changes what a visitor sees on
+// screen — the visible error message is unchanged — but it is visible to
+// anyone who opens browser devtools' Network tab, so set this back to
+// false once submissions are confirmed working.
+define('DEBUG_MODE', true);
