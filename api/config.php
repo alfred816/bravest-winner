@@ -41,5 +41,5 @@ define('MAIL_METHOD', 'mail');
 define('SMTP_HOST', 'send.one.com');
 define('SMTP_PORT', 587);           // 587 = STARTTLS, 465 = implicit TLS
 define('SMTP_ENCRYPTION', 'tls');   // 'tls' for port 587, 'ssl' for port 465
-define('SMTP_USERNAME', 'no-reply@celltonispharma.uk'); // full mailbox address
+define('SMTP_USERNAME', 'contact@celltonispharma.uk'); // full mailbox address
 define('SMTP_PASSWORD', '');        // the mailbox password — fill in, never commit a real one
