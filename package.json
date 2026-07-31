@@ -1,0 +1,9 @@
+{
+  "name": "celltonis-pharma-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "CellTonis Pharma marketing site — static HTML/CSS/JS with a serverless form-submission endpoint.",
+  "engines": {
+    "node": ">=18"
+  }
+}
