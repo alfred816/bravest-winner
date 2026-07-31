@@ -1,0 +1,3 @@
+# Runtime rate-limit state written by api/submit.php — never commit
+# actual submission data.
+/api/ratelimit/*.json

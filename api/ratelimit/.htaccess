@@ -1,0 +1,11 @@
+# Deny all direct web access to the rate-limit storage files. They only
+# ever contain timestamps, but there is no reason for this directory to
+# be reachable over HTTP at all.
+
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

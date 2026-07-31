@@ -1,0 +1,16 @@
+# Only submit.php should ever be requested directly. config.php and
+# mailer.php are include-only — block direct web access as defense in
+# depth (neither file outputs anything even if requested directly, but
+# there's no reason to allow the request at all).
+
+<IfModule mod_authz_core.c>
+  <FilesMatch "^(config|mailer)\.php$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  <FilesMatch "^(config|mailer)\.php$">
+    Order allow,deny
+    Deny from all
+  </FilesMatch>
+</IfModule>

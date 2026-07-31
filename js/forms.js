@@ -224,7 +224,7 @@
       var payload = serializeForm(form);
       payload.formType = form.getAttribute("data-form");
 
-      fetch("/api/submit", {
+      fetch("/api/submit.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
