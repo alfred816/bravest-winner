@@ -236,42 +236,4 @@
     }
   }
 
-  /* ======================================================================
-     Markets line — draws the connecting line and reveals nodes in sequence.
-     ====================================================================== */
-
-  var marketsPath = document.querySelector(".markets-path");
-  var marketNodes = document.querySelectorAll(".market-node");
-
-  if (marketsPath) {
-    var pathLength = marketsPath.getTotalLength();
-    marketsPath.style.strokeDasharray = pathLength;
-    marketsPath.style.strokeDashoffset = reduceMotion ? 0 : pathLength;
-    marketsPath.style.transition = "stroke-dashoffset 1.6s cubic-bezier(0.22, 1, 0.36, 1)";
-
-    function playMarkets() {
-      marketsPath.style.strokeDashoffset = 0;
-      marketNodes.forEach(function (node, idx) {
-        setTimeout(function () {
-          node.classList.add("in-view");
-        }, 200 + idx * 180);
-      });
-    }
-
-    if (reduceMotion) {
-      marketNodes.forEach(function (node) { node.classList.add("in-view"); });
-    } else if ("IntersectionObserver" in window) {
-      var marketsObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            playMarkets();
-            marketsObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.3 });
-      marketsObserver.observe(marketsPath.closest(".markets-line-wrap"));
-    } else {
-      playMarkets();
-    }
-  }
 })();

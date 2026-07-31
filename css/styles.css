@@ -503,16 +503,62 @@ button.btn {
    Mechanism
    ========================================================================== */
 
+.mechanism-list.reveal {
+  /* Observed for its own in-view state (drives the pulse below), but the
+     individual items already animate in — the list itself shouldn't. */
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 .mechanism-list {
+  position: relative;
   margin-top: var(--space-lg);
+  padding-top: var(--space-md);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-lg);
 }
 
+.mechanism-list::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.mechanism-list::after {
+  content: "";
+  position: absolute;
+  top: -2.5px;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(47, 190, 134, 0.7);
+  animation: mechanismpulse 4.5s linear infinite;
+  animation-play-state: paused;
+}
+
+.mechanism-list.in-view::after { animation-play-state: running; }
+
+@keyframes mechanismpulse {
+  0% { left: 0; opacity: 0; }
+  6% { opacity: 1; }
+  94% { opacity: 1; }
+  100% { left: calc(100% - 6px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mechanism-list::after { display: none; }
+}
+
 .mechanism-item {
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--line-strong);
+  padding-top: 0;
 }
 
 .mechanism-number {
@@ -573,20 +619,69 @@ button.btn {
 }
 .network-diagram.in-view .net-labels text { opacity: 1; }
 
+/* Continuous pulses along the aggregation point once the diagram has
+   drawn in — the network reads as live, not a static illustration. */
+.net-pulse {
+  offset-rotate: 0deg;
+  opacity: 0;
+  animation: netpulse 3.6s linear infinite;
+  animation-play-state: paused;
+}
+.network-diagram.in-view .net-pulse { animation-play-state: running; }
+
+@keyframes netpulse {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+.network-diagram.in-view .net-core {
+  animation: coreglow 2.6s ease-in-out infinite;
+}
+
+@keyframes coreglow {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(47, 190, 134, 0)); }
+  50% { filter: drop-shadow(0 0 6px rgba(47, 190, 134, 0.55)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .net-pulse { display: none; }
+  .network-diagram.in-view .net-core { animation: none; }
+}
+
 /* ==========================================================================
    Who it serves
    ========================================================================== */
 
 .serves-grid {
   margin-top: var(--space-lg);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-lg);
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-md);
 }
 
 .serves-item {
+  flex: 1;
   padding-top: var(--space-md);
   border-top: 1px solid var(--line-strong);
+}
+
+.serves-connector {
+  flex-shrink: 0;
+  align-self: center;
+  margin-top: var(--space-md);
+  font-family: var(--font-mono);
+  color: var(--grey-500);
+  font-size: 1.2rem;
+}
+
+.serves-index {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--grey-300);
+  margin-bottom: 0.6rem;
 }
 
 .serves-tag {
@@ -654,42 +749,83 @@ button.btn {
    Markets
    ========================================================================== */
 
-.markets-line-wrap { margin-top: var(--space-lg); }
+.markets-flow-wrap { margin-top: var(--space-xl); }
 
-.markets-line { width: 100%; height: auto; margin-bottom: var(--space-md); }
-
-.market-node {
-  opacity: 0;
-  transition: opacity 0.6s var(--ease), r 0.3s var(--ease);
+.markets-flow {
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
-.market-node.in-view { opacity: 1; }
 
-.markets-labels {
+.flow-node circle { transform-origin: center; }
+
+.flow-pulse {
+  offset-rotate: 0deg;
+  animation: flowpulse 3.4s linear infinite;
+  animation-play-state: paused;
+}
+.markets-flow-wrap.in-view .flow-pulse { animation-play-state: running; }
+
+@keyframes flowpulse {
+  0% { offset-distance: 0%; opacity: 0; }
+  6% { opacity: 1; }
+  94% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+.markets-detail {
+  margin-top: var(--space-lg);
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-sm);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  border-top: 1px solid var(--line-strong);
+  padding-top: var(--space-md);
 }
 
-.markets-labels li {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.markets-labels li:first-child .market-name { color: var(--accent); }
-
-.market-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--offwhite);
-}
-
-.market-tag {
+.market-region {
+  display: block;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.markets-detail p {
+  font-size: 0.95rem;
+  color: var(--grey-100);
+  line-height: 1.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-pulse { display: none; }
+}
+
+/* ==========================================================================
+   Statement break — a short, centered interstitial. Deliberately has no
+   kicker/number, unlike every other section, so the page's rhythm breaks
+   for a moment instead of scrolling as one long uniform pattern.
+   ========================================================================== */
+
+.statement {
+  position: relative;
+  text-align: center;
+  padding: var(--space-xl) 0;
+  background:
+    radial-gradient(ellipse 55% 90% at 50% 50%, rgba(47, 190, 134, 0.07), transparent 70%),
+    var(--black);
+}
+
+.statement-text {
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  max-width: 19ch;
+  margin: 0 auto;
+  color: var(--offwhite);
 }
 
 /* ==========================================================================
@@ -1146,7 +1282,7 @@ body.modal-open { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal, .net-nodes circle, .net-core, .net-labels text, .market-node {
+  .reveal, .net-nodes circle, .net-core, .net-labels text {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -1162,8 +1298,12 @@ body.modal-open { overflow: hidden; }
    ========================================================================== */
 
 @media (max-width: 1080px) {
-  .mechanism-list { grid-template-columns: 1fr; gap: var(--space-lg); }
-  .serves-grid { grid-template-columns: 1fr; gap: var(--space-lg); }
+  .mechanism-list { grid-template-columns: 1fr; gap: var(--space-lg); padding-top: 0; }
+  .mechanism-list::before,
+  .mechanism-list::after { display: none; }
+  .mechanism-item { padding-top: var(--space-md); border-top: 1px solid var(--line-strong); }
+  .serves-grid { flex-direction: column; gap: var(--space-lg); }
+  .serves-connector { display: none; }
   .principles-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-inner { grid-template-columns: 1fr 1fr; }
   .footer-brand { grid-column: 1 / -1; }
@@ -1176,8 +1316,7 @@ body.modal-open { overflow: hidden; }
 }
 
 @media (max-width: 860px) {
-  .markets-labels { grid-template-columns: repeat(3, 1fr); }
-  .markets-labels li:nth-child(4), .markets-labels li:nth-child(5) { grid-column: span 1; }
+  .markets-detail { grid-template-columns: 1fr; gap: var(--space-md); }
 
   .section-head {
     grid-template-columns: 1fr;
@@ -1219,11 +1358,10 @@ body.modal-open { overflow: hidden; }
 
   .principles-grid { grid-template-columns: 1fr; }
 
-  .markets-labels { grid-template-columns: repeat(2, 1fr); }
-
   .footer-inner { grid-template-columns: 1fr; }
 
   .net-labels text { font-size: 22px; }
+  .flow-labels text { font-size: 46px; }
 
   .modal { padding: 0; }
   .modal-panel,

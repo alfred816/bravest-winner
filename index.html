@@ -108,7 +108,7 @@
         </div>
       </div>
 
-      <ol class="mechanism-list">
+      <ol class="mechanism-list reveal">
         <li class="mechanism-item reveal">
           <span class="mechanism-number">01</span>
           <h3>Aggregate</h3>
@@ -191,6 +191,14 @@
           <circle cx="470" cy="500" r="7"/>
         </g>
 
+        <!-- continuous aggregation pulses: demand flowing into the network layer -->
+        <g class="net-pulse-group">
+          <circle class="net-pulse" style="offset-path: path('M480,150 C 560,150 560,150 600,150'); animation-delay: 2.1s;" r="3.5" fill="#2FBE86"/>
+          <circle class="net-pulse" style="offset-path: path('M480,260 C 560,260 560,220 600,220'); animation-delay: 2.9s;" r="3.5" fill="#2FBE86"/>
+          <circle class="net-pulse" style="offset-path: path('M480,380 C 560,380 560,340 600,340'); animation-delay: 3.7s;" r="3.5" fill="#2FBE86"/>
+          <circle class="net-pulse" style="offset-path: path('M480,500 C 560,500 560,470 600,470'); animation-delay: 4.5s;" r="3.5" fill="#2FBE86"/>
+        </g>
+
         <!-- celltonis layer -->
         <rect class="net-core" x="600" y="80" width="40" height="470" rx="6" fill="#2FBE86"/>
 
@@ -229,23 +237,37 @@
 
       <div class="serves-grid">
         <article class="serves-item reveal">
+          <span class="serves-index">01</span>
           <span class="serves-tag">Clinics</span>
           <h3>More purchasing power.<br>Less procurement friction.</h3>
-          <p>Clinics join the network without needing the purchasing scale of a major group — participating in aggregated demand rather than negotiating alone.</p>
+          <p>Clinics join the network without needing the purchasing scale of a major group — participating in aggregated demand rather than negotiating alone. One application, one point of contact, one supply line.</p>
         </article>
 
+        <span class="serves-connector" aria-hidden="true">→</span>
+
         <article class="serves-item reveal">
+          <span class="serves-index">02</span>
           <span class="serves-tag">Distributors</span>
           <h3>Concentrated demand.<br>Qualified buyers.</h3>
-          <p>Distributors gain access to structured, downstream demand from clinics already inside the network — rather than sourcing individual buyers one at a time.</p>
+          <p>Distributors gain access to structured, downstream demand from clinics already inside the network — rather than sourcing individual buyers one at a time, market by market.</p>
         </article>
 
+        <span class="serves-connector" aria-hidden="true">→</span>
+
         <article class="serves-item reveal">
+          <span class="serves-index">03</span>
           <span class="serves-tag">Manufacturers</span>
           <h3>Connect capacity to demand.</h3>
-          <p>As the network expands, it creates a long-term path for manufacturers to connect production capacity with a growing base of qualified buyers.</p>
+          <p>As the network expands, it creates a long-term path for manufacturers to connect production capacity directly with a growing, qualified base of buyers — with less noise in between.</p>
         </article>
       </div>
+    </div>
+  </section>
+
+  <!-- ============================= STATEMENT ============================= -->
+  <section class="section section--black statement">
+    <div class="container narrow">
+      <p class="statement-text reveal">Every order placed alone is leverage the network doesn't have yet.</p>
     </div>
   </section>
 
@@ -281,28 +303,52 @@
       <div class="section-head">
         <p class="kicker reveal">06 — Markets</p>
         <div class="section-head-body">
-          <h2 class="reveal">Built to connect markets.</h2>
-          <p class="lede reveal">CellTonis operates from a UK base, with reach into the markets below today. The network is designed to extend further as participation grows.</p>
+          <h2 class="reveal">Three regions.<br>One network.</h2>
+          <p class="lede reveal">CellTonis connects supply and demand across the UK, Europe and Asia — one network designed to extend further as participation grows.</p>
         </div>
       </div>
 
-      <div class="markets-line-wrap">
-        <svg class="markets-line" viewBox="0 0 1200 140" role="img" aria-label="Line diagram connecting the United Kingdom, United Arab Emirates, Saudi Arabia, Kazakhstan and Japan" preserveAspectRatio="xMidYMid meet">
-          <path class="markets-path" d="M60,70 L1140,70" stroke="#3A3F45" stroke-width="1.2" fill="none"/>
-          <g class="market-node-group">
-            <circle class="market-node reveal" cx="60" cy="70" r="7" fill="#2FBE86"/>
-            <circle class="market-node reveal" cx="345" cy="70" r="7" fill="#6b7076"/>
-            <circle class="market-node reveal" cx="630" cy="70" r="7" fill="#6b7076"/>
-            <circle class="market-node reveal" cx="915" cy="70" r="7" fill="#6b7076"/>
-            <circle class="market-node reveal" cx="1140" cy="70" r="7" fill="#6b7076"/>
+      <div class="markets-flow-wrap reveal">
+        <svg class="markets-flow" viewBox="0 0 1200 210" role="img" aria-label="Diagram showing the CellTonis network connecting the UK, Europe and Asia" preserveAspectRatio="xMidYMid meet">
+          <path class="flow-path" d="M130,130 L600,130" stroke="#3A3F45" stroke-width="1.2" fill="none"/>
+          <path class="flow-path" d="M600,130 L1070,130" stroke="#3A3F45" stroke-width="1.2" fill="none"/>
+
+          <circle class="flow-pulse" style="offset-path: path('M130,130 L600,130'); animation-delay: 0s;" r="3.5" fill="#2FBE86"/>
+          <circle class="flow-pulse" style="offset-path: path('M600,130 L1070,130'); animation-delay: 1.7s;" r="3.5" fill="#2FBE86"/>
+
+          <g class="flow-node">
+            <circle cx="130" cy="130" r="21" stroke="#2FBE86" stroke-width="1" fill="none" opacity="0.35"/>
+            <circle cx="130" cy="130" r="8" fill="#2FBE86"/>
+          </g>
+          <g class="flow-node">
+            <circle cx="600" cy="130" r="21" stroke="#9CA0A6" stroke-width="1" fill="none" opacity="0.3"/>
+            <circle cx="600" cy="130" r="8" fill="#9CA0A6"/>
+          </g>
+          <g class="flow-node">
+            <circle cx="1070" cy="130" r="21" stroke="#9CA0A6" stroke-width="1" fill="none" opacity="0.3"/>
+            <circle cx="1070" cy="130" r="8" fill="#9CA0A6"/>
+          </g>
+
+          <g class="flow-labels" font-family="-apple-system, Helvetica, Arial, sans-serif" font-weight="700" font-size="30" fill="#EDEBE6">
+            <text x="130" y="72" text-anchor="middle">UK</text>
+            <text x="600" y="72" text-anchor="middle">EUROPE</text>
+            <text x="1070" y="72" text-anchor="middle">ASIA</text>
           </g>
         </svg>
-        <ul class="markets-labels">
-          <li class="reveal"><span class="market-name">United Kingdom</span><span class="market-tag">Base</span></li>
-          <li class="reveal"><span class="market-name">United Arab Emirates</span></li>
-          <li class="reveal"><span class="market-name">Saudi Arabia</span></li>
-          <li class="reveal"><span class="market-name">Kazakhstan</span></li>
-          <li class="reveal"><span class="market-name">Japan</span></li>
+
+        <ul class="markets-detail">
+          <li>
+            <span class="market-region">UK</span>
+            <p>Clinics and distributors across the UK market.</p>
+          </li>
+          <li>
+            <span class="market-region">Europe</span>
+            <p>Expanding reach across the continent as the network grows.</p>
+          </li>
+          <li>
+            <span class="market-region">Asia</span>
+            <p>Korean manufacturing and buyers spanning the Gulf, Central Asia and East Asia.</p>
+          </li>
         </ul>
       </div>
     </div>
@@ -384,7 +430,7 @@
     <div class="footer-contact">
       <p class="footer-heading">Contact</p>
       <a href="mailto:contact@celltonispharma.uk">contact@celltonispharma.uk</a>
-      <p class="footer-markets">UK · UAE · Saudi Arabia · Kazakhstan · Japan</p>
+      <p class="footer-markets">UK · Europe · Asia</p>
     </div>
   </div>
   <div class="container footer-legal">
