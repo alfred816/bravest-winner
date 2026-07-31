@@ -1,6 +1,20 @@
 (function () {
   "use strict";
 
+  // Header background on scroll
+  var header = document.getElementById("site-header");
+  if (header) {
+    var onScroll = function () {
+      if (window.scrollY > 24) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
   // Mobile nav toggle
   var toggle = document.getElementById("nav-toggle");
   var mobileNav = document.getElementById("mobile-nav");
