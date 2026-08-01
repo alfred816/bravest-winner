@@ -134,45 +134,49 @@
       <div class="section-head">
         <p class="kicker reveal">03 — The Network</p>
         <div class="section-head-body">
-          <h2 class="reveal">One network.<br>Multiple points of leverage.</h2>
-          <p class="lede reveal">Clinics and buyers generate demand on one side. Manufacturing capacity sits on the other — and CellTonis is the connective layer that pools many small orders into fewer, larger, better-negotiated ones.</p>
+          <h2 class="reveal">Aggregated demand.</h2>
+          <p class="lede reveal">CellTonis consolidates purchasing demand to strengthen negotiating power and unlock direct manufacturer relationships.</p>
         </div>
       </div>
     </div>
 
     <div class="network-diagram-wrap">
-      <svg class="supply-chain-diagram" id="supply-chain-diagram" viewBox="0 0 1200 660" role="img" aria-label="Diagram showing many small clinic orders pooling through CellTonis into one consolidated order sent to a manufacturer, unlocking manufacturer pricing" preserveAspectRatio="xMidYMid meet">
+      <svg class="supply-chain-diagram" id="supply-chain-diagram" viewBox="0 0 1200 660" role="img" aria-label="Diagram showing many small clinic orders aggregating through CellTonis, then splitting into a primary flow to manufacturers and a smaller flow to selected distribution partners" preserveAspectRatio="xMidYMid meet">
 
-        <!-- populated per cycle by js/supply-chain.js -->
+        <!-- all geometry below is populated by js/supply-chain.js, which
+             maintains separate desktop (horizontal) and mobile (vertical)
+             layouts rather than scaling one layout down -->
         <g class="sc-clinic-lines"></g>
         <g class="sc-clinic-nodes"></g>
         <g class="sc-clinic-labels"></g>
 
-        <path class="sc-trunk" d="M460,330 L490,330" fill="none"/>
-        <circle class="sc-confluence-glow" cx="460" cy="330" r="26" fill="#2FBE86"/>
+        <path class="sc-trunk-in" fill="none"></path>
+        <circle class="sc-confluence-glow" fill="#2FBE86"></circle>
 
-        <rect class="sc-core" x="490" y="230" width="64" height="200" rx="8"/>
-        <text class="sc-counter-sub" x="522" y="315" text-anchor="middle">POOLING</text>
-        <text class="sc-counter" x="522" y="340" text-anchor="middle">0 UNITS</text>
+        <rect class="sc-core"></rect>
+        <text class="sc-counter-sub" text-anchor="middle"></text>
+        <text class="sc-counter" text-anchor="middle"></text>
 
-        <path class="sc-output-line" d="M554,400 L554,400" fill="none"/>
+        <path class="sc-trunk-out" fill="none"></path>
+        <circle class="sc-branch-glow" fill="#2FBE86"></circle>
 
-        <g class="sc-mfr-nodes">
-          <circle class="sc-mfr-node" data-id="A" cx="1010" cy="150" r="7"/>
-          <circle class="sc-mfr-node" data-id="B" cx="1010" cy="330" r="7"/>
-          <circle class="sc-mfr-node" data-id="C" cx="1010" cy="510" r="7"/>
-        </g>
-        <text class="sc-mfr-label" x="1010" y="330" text-anchor="middle"></text>
+        <path class="sc-branch-dist" fill="none"></path>
+        <path class="sc-branch-mfr" fill="none"></path>
+
+        <circle class="sc-dest-node sc-dest-dist"></circle>
+        <circle class="sc-dest-node sc-dest-mfr"></circle>
+
+        <text class="sc-dest-label sc-dest-label-dist" text-anchor="middle">SELECT DISTRIBUTION PARTNERS</text>
+        <text class="sc-dest-label sc-dest-label-mfr" text-anchor="middle">MANUFACTURERS</text>
 
         <g class="sc-zone-labels">
-          <text x="210" y="630" text-anchor="middle">CLINICS &amp; BUYERS</text>
-          <text class="sc-zone-label-core" x="522" y="195" text-anchor="middle">CELLTONIS</text>
-          <text x="1010" y="630" text-anchor="middle">MANUFACTURERS</text>
+          <text class="sc-zone-clinics" text-anchor="middle">CLINICS &amp; BUYERS</text>
+          <text class="sc-zone-label-core" text-anchor="middle">CELLTONIS</text>
         </g>
       </svg>
     </div>
 
-    <p class="supply-chain-caption"><span class="scc-text">MANY SMALL ORDERS &rarr; ONE NEGOTIATED ORDER &rarr; MANUFACTURER PRICING.</span></p>
+    <p class="supply-chain-caption"><span class="scc-text">Manufacturers are the primary sourcing objective. Strategic distribution partners provide additional supply resilience where appropriate.</span></p>
   </section>
 
   <!-- ============================= 04 — WHO IT SERVES ============================= -->

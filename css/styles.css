@@ -586,11 +586,13 @@ button.btn {
 }
 
 /* ==========================================================================
-   Supply chain consolidation diagram — the site's central visual argument:
-   many small, unremarkable clinic orders converge and are pooled into one
-   thick, unmissable order sent to a manufacturer. The contrast in weight
-   and colour between the individual lines and the consolidated line IS
-   the point; nothing here should compete with that contrast.
+   Supply chain / aggregation diagram — the site's central visual argument.
+   Many small, unremarkable clinic orders converge into CellTonis, which
+   glows brighter as it pools them, then a single flow exits and splits:
+   a thick, bright branch to manufacturers (the primary objective) and a
+   visibly smaller, quieter branch to selected distribution partners.
+   Weight and colour intensity carry the argument — manufacturers must
+   always read as the dominant destination, distributors as supportive.
    ========================================================================== */
 
 .network-diagram-wrap {
@@ -599,7 +601,7 @@ button.btn {
   padding: 0 var(--space-md);
 }
 
-.supply-chain-diagram { width: 100%; height: auto; }
+.supply-chain-diagram { width: 100%; height: auto; overflow: visible; }
 
 /* Individual clinic lines/nodes/labels — deliberately thin, grey, quiet. */
 
@@ -613,7 +615,27 @@ button.btn {
 .sc-node {
   fill: var(--grey-300);
   opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
   transition: opacity 0.3s var(--ease);
+}
+
+/* A brief expanding ring when a clinic node appears — "pulses
+   independently" before its line ever starts drawing in. */
+.sc-node-ping {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.4;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.sc-node-ping.is-active {
+  animation: scnodeping 0.9s var(--ease) forwards;
+}
+@keyframes scnodeping {
+  0% { opacity: 0.65; transform: scale(0.3); }
+  100% { opacity: 0; transform: scale(2.6); }
 }
 
 .sc-clinic-label {
@@ -625,29 +647,30 @@ button.btn {
 }
 
 /* The confluence: where thin grey tributaries become one thick emerald
-   river. The trunk's stroke-width/colour are driven inline by JS as each
-   clinic line arrives — this file only defines how those changes ease. */
+   river. Stroke-width/colour are driven inline by JS as each clinic
+   line arrives — this file only defines how those changes ease. */
 
-.sc-trunk {
+.sc-trunk-in {
   stroke: var(--grey-500);
   stroke-width: 1.5;
   stroke-linecap: round;
   transition: stroke-width 0.35s var(--ease), stroke 0.35s var(--ease);
 }
 
-.sc-confluence-glow {
+.sc-confluence-glow,
+.sc-branch-glow {
   opacity: 0;
   filter: blur(6px);
   transition: opacity 0.35s var(--ease);
 }
 
-/* The CellTonis node itself: a solid, glowing emerald bar. Counter text
-   sits directly on it in dark type for contrast, the same way accent
-   buttons elsewhere on the site use dark text on an emerald fill. */
+/* The CellTonis node itself: a solid, glowing emerald bar (or, in the
+   mobile layout, a horizontal bar). Counter text sits directly on it in
+   dark type, the same way accent buttons elsewhere use dark-on-emerald. */
 
 .sc-core {
   fill: var(--accent);
-  transition: filter 0.4s var(--ease);
+  transition: filter 0.4s var(--ease), x 0.3s var(--ease), y 0.3s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease);
 }
 
 .sc-counter-sub {
@@ -665,37 +688,66 @@ button.btn {
   fill: var(--black);
 }
 
-/* The consolidated order: thick, bright, unmissable — the opposite of
-   every individual clinic line. */
+/* One flow exits CellTonis, then splits. The trunk-out and the
+   manufacturer branch are the "stronger pulse" — thick, bright, at full
+   opacity. The distributor branch is deliberately lighter: thinner,
+   dimmer, a supporting flow rather than an equal one. */
 
-.sc-output-line {
+.sc-trunk-out,
+.sc-branch-mfr {
   stroke: var(--accent);
-  stroke-width: 11;
+  stroke-width: 9;
   stroke-linecap: round;
   opacity: 0;
-  filter: drop-shadow(0 0 8px rgba(47, 190, 134, 0.55));
+  filter: drop-shadow(0 0 7px rgba(47, 190, 134, 0.5));
 }
 
-.sc-mfr-node {
+.sc-branch-dist {
+  stroke: #6FA692;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.sc-dest-node {
   fill: var(--grey-300);
-  transition: fill 0.3s var(--ease), r 0.3s var(--ease), filter 0.3s var(--ease);
-}
-.sc-mfr-node.active {
-  fill: var(--accent);
-  r: 10;
-  filter: drop-shadow(0 0 8px rgba(47, 190, 134, 0.6));
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: fill 0.4s var(--ease), r 0.4s var(--ease), filter 0.4s var(--ease);
 }
 
-.sc-mfr-label {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+.sc-dest-mfr { r: 13; }
+.sc-dest-dist { r: 7; }
+
+.sc-dest-mfr.active {
   fill: var(--accent);
+  filter: drop-shadow(0 0 12px rgba(47, 190, 134, 0.65));
+}
+.sc-dest-dist.active {
+  fill: #6FA692;
+  filter: drop-shadow(0 0 5px rgba(111, 166, 146, 0.45));
+}
+
+.sc-dest-label {
+  font-family: var(--font-mono);
   opacity: 0;
   transition: opacity 0.4s var(--ease);
 }
-.sc-mfr-label.is-visible { opacity: 1; }
+.sc-dest-label.is-visible { opacity: 1; }
+
+.sc-dest-label-mfr {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  fill: var(--accent);
+}
+
+.sc-dest-label-dist {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  fill: var(--grey-300);
+}
 
 .sc-zone-labels text {
   font-family: var(--font-mono);
@@ -709,48 +761,43 @@ button.btn {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sc-trunk,
+  .sc-trunk-in,
   .sc-confluence-glow,
+  .sc-branch-glow,
   .sc-core,
-  .sc-mfr-node,
-  .sc-mfr-label {
+  .sc-dest-node,
+  .sc-dest-label {
     transition: none;
   }
+  .sc-node-ping { display: none; }
 }
 
-/* Summary caption — typed on once, after the diagram's first full cycle. */
+/* Summary caption — fades in once, after the diagram's first full cycle,
+   and stays visible through subsequent loops. */
 
 .supply-chain-caption {
-  margin-top: var(--space-md);
+  margin: var(--space-md) auto 0;
+  max-width: 52ch;
   text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.supply-chain-caption.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .scc-text {
-  display: inline-block;
-  overflow: hidden;
-  max-width: 0;
-  white-space: nowrap;
-  vertical-align: bottom;
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
   color: var(--grey-100);
-  border-right: 2px solid var(--accent);
-  transition: max-width 1.6s steps(48, end);
-}
-.scc-text.is-typed {
-  max-width: 100%;
-  border-right-color: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scc-text {
-    max-width: none;
-    overflow: visible;
-    border-right: none;
-    transition: none;
-  }
+  .supply-chain-caption { transition: none; }
 }
 
 /* ==========================================================================
@@ -1466,10 +1513,11 @@ body.modal-open { overflow: hidden; }
   /* Fewer clinics and no per-clinic labels at this width (js/supply-
      chain.js) — the zone/counter/manufacturer text can run larger since
      it's no longer competing with 8-10 scattered labels for space. */
-  .sc-zone-labels text { font-size: 30px; }
-  .sc-counter { font-size: 38px; }
-  .sc-counter-sub { font-size: 20px; }
-  .sc-mfr-label { font-size: 26px; }
+  .sc-zone-labels text { font-size: 26px; }
+  .sc-counter { font-size: 32px; }
+  .sc-counter-sub { font-size: 17px; }
+  .sc-dest-label-mfr { font-size: 24px; }
+  .sc-dest-label-dist { font-size: 16px; }
   .flow-labels text { font-size: 46px; }
 
   .modal { padding: 0; }
