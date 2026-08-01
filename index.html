@@ -135,94 +135,44 @@
         <p class="kicker reveal">03 — The Network</p>
         <div class="section-head-body">
           <h2 class="reveal">One network.<br>Multiple points of leverage.</h2>
-          <p class="lede reveal">Manufacturing capacity and distributor inventory sit on one side. Clinics and buyers sit on the other — and CellTonis is the connective layer that turns many small orders into fewer, larger, better-negotiated ones.</p>
+          <p class="lede reveal">Clinics and buyers generate demand on one side. Manufacturing capacity sits on the other — and CellTonis is the connective layer that pools many small orders into fewer, larger, better-negotiated ones.</p>
         </div>
       </div>
     </div>
 
     <div class="network-diagram-wrap">
-      <svg class="network-diagram" id="network-diagram" viewBox="0 0 1200 640" role="img" aria-label="Diagram showing manufacturers and distributors connecting through the CellTonis network layer to reach clinics and buyers" preserveAspectRatio="xMidYMid meet">
+      <svg class="supply-chain-diagram" id="supply-chain-diagram" viewBox="0 0 1200 660" role="img" aria-label="Diagram showing many small clinic orders pooling through CellTonis into one consolidated order sent to a manufacturer, unlocking manufacturer pricing" preserveAspectRatio="xMidYMid meet">
 
-        <!-- connecting lines: manufacturers -> distributors -->
-        <g class="net-lines net-lines--in" stroke="#3A3F45" stroke-width="1.2" fill="none">
-          <path class="net-line" d="M170,110 C 320,110 320,150 460,150"/>
-          <path class="net-line" d="M170,110 C 320,110 320,260 460,260"/>
-          <path class="net-line" d="M170,230 C 320,230 320,150 460,150"/>
-          <path class="net-line" d="M170,230 C 320,230 320,380 460,380"/>
-          <path class="net-line" d="M170,350 C 320,350 320,260 460,260"/>
-          <path class="net-line" d="M170,350 C 320,350 320,500 460,500"/>
-          <path class="net-line" d="M170,470 C 320,470 320,380 460,380"/>
-          <path class="net-line" d="M170,470 C 320,470 320,500 460,500"/>
+        <!-- populated per cycle by js/supply-chain.js -->
+        <g class="sc-clinic-lines"></g>
+        <g class="sc-clinic-nodes"></g>
+        <g class="sc-clinic-labels"></g>
+
+        <path class="sc-trunk" d="M460,330 L490,330" fill="none"/>
+        <circle class="sc-confluence-glow" cx="460" cy="330" r="26" fill="#2FBE86"/>
+
+        <rect class="sc-core" x="490" y="230" width="64" height="200" rx="8"/>
+        <text class="sc-counter-sub" x="522" y="315" text-anchor="middle">POOLING</text>
+        <text class="sc-counter" x="522" y="340" text-anchor="middle">0 UNITS</text>
+
+        <path class="sc-output-line" d="M554,400 L554,400" fill="none"/>
+
+        <g class="sc-mfr-nodes">
+          <circle class="sc-mfr-node" data-id="A" cx="1010" cy="150" r="7"/>
+          <circle class="sc-mfr-node" data-id="B" cx="1010" cy="330" r="7"/>
+          <circle class="sc-mfr-node" data-id="C" cx="1010" cy="510" r="7"/>
         </g>
+        <text class="sc-mfr-label" x="1010" y="330" text-anchor="middle"></text>
 
-        <!-- distributors -> celltonis layer -->
-        <g class="net-lines net-lines--core" stroke="#2FBE86" stroke-opacity="0.55" stroke-width="1.2" fill="none">
-          <path class="net-line" d="M480,150 C 560,150 560,150 600,150"/>
-          <path class="net-line" d="M480,260 C 560,260 560,220 600,220"/>
-          <path class="net-line" d="M480,380 C 560,380 560,340 600,340"/>
-          <path class="net-line" d="M480,500 C 560,500 560,470 600,470"/>
-        </g>
-
-        <!-- celltonis layer -> clinics -->
-        <g class="net-lines net-lines--out" stroke="#3A3F45" stroke-width="1.2" fill="none">
-          <path class="net-line" d="M640,150 C 760,150 780,60 940,60"/>
-          <path class="net-line" d="M640,190 C 760,190 780,150 940,150"/>
-          <path class="net-line" d="M640,220 C 760,220 780,240 940,240"/>
-          <path class="net-line" d="M640,290 C 760,290 780,320 940,320"/>
-          <path class="net-line" d="M640,340 C 760,340 780,400 940,400"/>
-          <path class="net-line" d="M640,410 C 760,410 780,480 940,480"/>
-          <path class="net-line" d="M640,470 C 760,470 780,560 940,560"/>
-          <path class="net-line" d="M640,500 C 760,500 780,600 940,600"/>
-        </g>
-
-        <!-- manufacturer nodes -->
-        <g class="net-nodes" fill="#6b7076">
-          <circle cx="170" cy="110" r="7"/>
-          <circle cx="170" cy="230" r="7"/>
-          <circle cx="170" cy="350" r="7"/>
-          <circle cx="170" cy="470" r="7"/>
-        </g>
-
-        <!-- distributor nodes -->
-        <g class="net-nodes" fill="#9CA0A6">
-          <circle cx="470" cy="150" r="7"/>
-          <circle cx="470" cy="260" r="7"/>
-          <circle cx="470" cy="380" r="7"/>
-          <circle cx="470" cy="500" r="7"/>
-        </g>
-
-        <!-- continuous aggregation pulses: demand flowing into the network layer -->
-        <g class="net-pulse-group">
-          <circle class="net-pulse" style="offset-path: path('M480,150 C 560,150 560,150 600,150'); animation-delay: 2.1s;" r="3.5" fill="#2FBE86"/>
-          <circle class="net-pulse" style="offset-path: path('M480,260 C 560,260 560,220 600,220'); animation-delay: 2.9s;" r="3.5" fill="#2FBE86"/>
-          <circle class="net-pulse" style="offset-path: path('M480,380 C 560,380 560,340 600,340'); animation-delay: 3.7s;" r="3.5" fill="#2FBE86"/>
-          <circle class="net-pulse" style="offset-path: path('M480,500 C 560,500 560,470 600,470'); animation-delay: 4.5s;" r="3.5" fill="#2FBE86"/>
-        </g>
-
-        <!-- celltonis layer -->
-        <rect class="net-core" x="600" y="80" width="40" height="470" rx="6" fill="#2FBE86"/>
-
-        <!-- clinic / buyer nodes -->
-        <g class="net-nodes" fill="#6b7076">
-          <circle cx="940" cy="60" r="6"/>
-          <circle cx="940" cy="150" r="6"/>
-          <circle cx="940" cy="240" r="6"/>
-          <circle cx="940" cy="320" r="6"/>
-          <circle cx="940" cy="400" r="6"/>
-          <circle cx="940" cy="480" r="6"/>
-          <circle cx="940" cy="560" r="6"/>
-          <circle cx="940" cy="600" r="6"/>
-        </g>
-
-        <!-- tier labels -->
-        <g class="net-labels" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" letter-spacing="1.5" fill="#82868A">
-          <text x="170" y="580" text-anchor="middle">MANUFACTURERS</text>
-          <text x="470" y="580" text-anchor="middle">DISTRIBUTORS</text>
-          <text x="620" y="40" text-anchor="middle" fill="#2FBE86">CELLTONIS</text>
-          <text x="940" y="638" text-anchor="middle">CLINICS &amp; BUYERS</text>
+        <g class="sc-zone-labels">
+          <text x="210" y="630" text-anchor="middle">CLINICS &amp; BUYERS</text>
+          <text class="sc-zone-label-core" x="522" y="195" text-anchor="middle">CELLTONIS</text>
+          <text x="1010" y="630" text-anchor="middle">MANUFACTURERS</text>
         </g>
       </svg>
     </div>
+
+    <p class="supply-chain-caption"><span class="scc-text">MANY SMALL ORDERS &rarr; ONE NEGOTIATED ORDER &rarr; MANUFACTURER PRICING.</span></p>
   </section>
 
   <!-- ============================= 04 — WHO IT SERVES ============================= -->
@@ -758,6 +708,7 @@
 
 <script src="js/main.js" defer></script>
 <script src="js/network.js" defer></script>
+<script src="js/supply-chain.js" defer></script>
 <script src="js/forms.js" defer></script>
 </body>
 </html>

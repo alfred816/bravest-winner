@@ -586,7 +586,11 @@ button.btn {
 }
 
 /* ==========================================================================
-   Network diagram
+   Supply chain consolidation diagram — the site's central visual argument:
+   many small, unremarkable clinic orders converge and are pooled into one
+   thick, unmissable order sent to a manufacturer. The contrast in weight
+   and colour between the individual lines and the consolidated line IS
+   the point; nothing here should compete with that contrast.
    ========================================================================== */
 
 .network-diagram-wrap {
@@ -595,59 +599,158 @@ button.btn {
   padding: 0 var(--space-md);
 }
 
-.network-diagram { width: 100%; height: auto; }
+.supply-chain-diagram { width: 100%; height: auto; }
 
-.net-line {
-  transition: stroke-dashoffset 1.4s var(--ease);
-}
+/* Individual clinic lines/nodes/labels — deliberately thin, grey, quiet. */
 
-.net-nodes circle,
-.net-core {
+.sc-line {
+  stroke: var(--grey-500);
+  stroke-width: 1.2;
+  fill: none;
   opacity: 0;
-  transform-origin: center;
-  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
 }
 
-.network-diagram.in-view .net-nodes circle,
-.network-diagram.in-view .net-core {
-  opacity: 1;
-}
-
-.net-labels text {
+.sc-node {
+  fill: var(--grey-300);
   opacity: 0;
-  transition: opacity 0.8s var(--ease) 0.6s;
+  transition: opacity 0.3s var(--ease);
 }
-.network-diagram.in-view .net-labels text { opacity: 1; }
 
-/* Continuous pulses along the aggregation point once the diagram has
-   drawn in — the network reads as live, not a static illustration. */
-.net-pulse {
-  offset-rotate: 0deg;
+.sc-clinic-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--grey-300);
   opacity: 0;
-  animation: netpulse 3.6s linear infinite;
-  animation-play-state: paused;
-}
-.network-diagram.in-view .net-pulse { animation-play-state: running; }
-
-@keyframes netpulse {
-  0% { offset-distance: 0%; opacity: 0; }
-  8% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { offset-distance: 100%; opacity: 0; }
+  transition: opacity 0.3s var(--ease);
 }
 
-.network-diagram.in-view .net-core {
-  animation: coreglow 2.6s ease-in-out infinite;
+/* The confluence: where thin grey tributaries become one thick emerald
+   river. The trunk's stroke-width/colour are driven inline by JS as each
+   clinic line arrives — this file only defines how those changes ease. */
+
+.sc-trunk {
+  stroke: var(--grey-500);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  transition: stroke-width 0.35s var(--ease), stroke 0.35s var(--ease);
 }
 
-@keyframes coreglow {
-  0%, 100% { filter: drop-shadow(0 0 0 rgba(47, 190, 134, 0)); }
-  50% { filter: drop-shadow(0 0 6px rgba(47, 190, 134, 0.55)); }
+.sc-confluence-glow {
+  opacity: 0;
+  filter: blur(6px);
+  transition: opacity 0.35s var(--ease);
+}
+
+/* The CellTonis node itself: a solid, glowing emerald bar. Counter text
+   sits directly on it in dark type for contrast, the same way accent
+   buttons elsewhere on the site use dark text on an emerald fill. */
+
+.sc-core {
+  fill: var(--accent);
+  transition: filter 0.4s var(--ease);
+}
+
+.sc-counter-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  fill: rgba(5, 6, 6, 0.65);
+}
+
+.sc-counter {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  fill: var(--black);
+}
+
+/* The consolidated order: thick, bright, unmissable — the opposite of
+   every individual clinic line. */
+
+.sc-output-line {
+  stroke: var(--accent);
+  stroke-width: 11;
+  stroke-linecap: round;
+  opacity: 0;
+  filter: drop-shadow(0 0 8px rgba(47, 190, 134, 0.55));
+}
+
+.sc-mfr-node {
+  fill: var(--grey-300);
+  transition: fill 0.3s var(--ease), r 0.3s var(--ease), filter 0.3s var(--ease);
+}
+.sc-mfr-node.active {
+  fill: var(--accent);
+  r: 10;
+  filter: drop-shadow(0 0 8px rgba(47, 190, 134, 0.6));
+}
+
+.sc-mfr-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  fill: var(--accent);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.sc-mfr-label.is-visible { opacity: 1; }
+
+.sc-zone-labels text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  fill: var(--grey-300);
+}
+.sc-zone-label-core {
+  fill: var(--accent) !important;
+  font-weight: 700;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .net-pulse { display: none; }
-  .network-diagram.in-view .net-core { animation: none; }
+  .sc-trunk,
+  .sc-confluence-glow,
+  .sc-core,
+  .sc-mfr-node,
+  .sc-mfr-label {
+    transition: none;
+  }
+}
+
+/* Summary caption — typed on once, after the diagram's first full cycle. */
+
+.supply-chain-caption {
+  margin-top: var(--space-md);
+  text-align: center;
+}
+
+.scc-text {
+  display: inline-block;
+  overflow: hidden;
+  max-width: 0;
+  white-space: nowrap;
+  vertical-align: bottom;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--grey-100);
+  border-right: 2px solid var(--accent);
+  transition: max-width 1.6s steps(48, end);
+}
+.scc-text.is-typed {
+  max-width: 100%;
+  border-right-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scc-text {
+    max-width: none;
+    overflow: visible;
+    border-right: none;
+    transition: none;
+  }
 }
 
 /* ==========================================================================
@@ -1282,7 +1385,7 @@ body.modal-open { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal, .net-nodes circle, .net-core, .net-labels text {
+  .reveal {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -1360,7 +1463,13 @@ body.modal-open { overflow: hidden; }
 
   .footer-inner { grid-template-columns: 1fr; }
 
-  .net-labels text { font-size: 22px; }
+  /* Fewer clinics and no per-clinic labels at this width (js/supply-
+     chain.js) — the zone/counter/manufacturer text can run larger since
+     it's no longer competing with 8-10 scattered labels for space. */
+  .sc-zone-labels text { font-size: 30px; }
+  .sc-counter { font-size: 38px; }
+  .sc-counter-sub { font-size: 20px; }
+  .sc-mfr-label { font-size: 26px; }
   .flow-labels text { font-size: 46px; }
 
   .modal { padding: 0; }
