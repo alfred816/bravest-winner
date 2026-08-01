@@ -692,6 +692,8 @@ button.btn {
 .agg-pulse-secondary { fill: #6FA692; }
 .agg-flow.in-view .agg-pulse { animation-play-state: running; }
 
+.agg-connector-dots circle { fill: var(--accent); opacity: 0.65; }
+
 @keyframes aggpulse {
   0% { offset-distance: 0%; opacity: 0; }
   8% { opacity: 1; }
@@ -699,7 +701,14 @@ button.btn {
   100% { offset-distance: 100%; opacity: 0; }
 }
 
-.agg-connector-mobile { display: none; }
+.agg-connector-mobile {
+  display: none;
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
 
 /* --- Supply partners: icon + name + bullet list, twice --- */
 
@@ -891,26 +900,6 @@ button.btn {
   }
 
   .agg-partner { text-align: left; }
-
-  .agg-connector-mobile {
-    width: 1px;
-    height: 40px;
-    margin: 0 auto;
-    background: var(--line-strong);
-    position: relative;
-  }
-  .agg-connector-mobile::after {
-    content: "";
-    position: absolute;
-    bottom: -1px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    border-right: 1px solid var(--grey-300);
-    border-bottom: 1px solid var(--grey-300);
-    rotate: 45deg;
-  }
 
   .agg-steps {
     flex-direction: column;
