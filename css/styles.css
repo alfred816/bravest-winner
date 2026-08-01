@@ -586,218 +586,350 @@ button.btn {
 }
 
 /* ==========================================================================
-   Supply chain / aggregation diagram — the site's central visual argument.
-   Many small, unremarkable clinic orders converge into CellTonis, which
-   glows brighter as it pools them, then a single flow exits and splits:
-   a thick, bright branch to manufacturers (the primary objective) and a
-   visibly smaller, quieter branch to selected distribution partners.
-   Weight and colour intensity carry the argument — manufacturers must
-   always read as the dominant destination, distributors as supportive.
+   Aggregation diagram (03 — The Network)
+   Built with CSS Grid for the column content and small, self-contained SVG
+   connectors only for the decorative lines between columns — no text lives
+   inside SVG, and no element is absolutely positioned against a fixed
+   canvas, so nothing can overlap, clip, or force horizontal scroll at any
+   width. Colours/spacing/type all reuse the tokens defined at the top of
+   this file; no new values are introduced here.
    ========================================================================== */
 
-.network-diagram-wrap {
-  max-width: var(--container-max);
-  margin: var(--space-xl) auto 0;
-  padding: 0 var(--space-md);
-}
-
-.supply-chain-diagram { width: 100%; height: auto; overflow: visible; }
-
-/* Individual clinic lines/nodes/labels — deliberately thin, grey, quiet. */
-
-.sc-line {
-  stroke: var(--grey-500);
-  stroke-width: 1.2;
-  fill: none;
-  opacity: 0;
-}
-
-.sc-node {
-  fill: var(--grey-300);
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: opacity 0.3s var(--ease);
-}
-
-/* A brief expanding ring when a clinic node appears — "pulses
-   independently" before its line ever starts drawing in. */
-.sc-node-ping {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.4;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.sc-node-ping.is-active {
-  animation: scnodeping 0.9s var(--ease) forwards;
-}
-@keyframes scnodeping {
-  0% { opacity: 0.65; transform: scale(0.3); }
-  100% { opacity: 0; transform: scale(2.6); }
-}
-
-.sc-clinic-label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  fill: var(--grey-300);
-  opacity: 0;
-  transition: opacity 0.3s var(--ease);
-}
-
-/* The confluence: where thin grey tributaries become one thick emerald
-   river. Stroke-width/colour are driven inline by JS as each clinic
-   line arrives — this file only defines how those changes ease. */
-
-.sc-trunk-in {
-  stroke: var(--grey-500);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  transition: stroke-width 0.35s var(--ease), stroke 0.35s var(--ease);
-}
-
-.sc-confluence-glow,
-.sc-branch-glow {
-  opacity: 0;
-  filter: blur(6px);
-  transition: opacity 0.35s var(--ease);
-}
-
-/* The CellTonis node itself: a solid, glowing emerald bar (or, in the
-   mobile layout, a horizontal bar). Counter text sits directly on it in
-   dark type, the same way accent buttons elsewhere use dark-on-emerald. */
-
-.sc-core {
-  fill: var(--accent);
-  transition: filter 0.4s var(--ease), x 0.3s var(--ease), y 0.3s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease);
-}
-
-.sc-counter-sub {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  fill: rgba(5, 6, 6, 0.65);
-}
-
-.sc-counter {
-  font-family: var(--font-mono);
-  font-size: 17px;
-  font-weight: 700;
-  fill: var(--black);
-}
-
-/* One flow exits CellTonis, then splits. The trunk-out and the
-   manufacturer branch are the "stronger pulse" — thick, bright, at full
-   opacity. The distributor branch is deliberately lighter: thinner,
-   dimmer, a supporting flow rather than an equal one. */
-
-.sc-trunk-out,
-.sc-branch-mfr {
-  stroke: var(--accent);
-  stroke-width: 9;
-  stroke-linecap: round;
-  opacity: 0;
-  filter: drop-shadow(0 0 7px rgba(47, 190, 134, 0.5));
-}
-
-.sc-branch-dist {
-  stroke: #6FA692;
-  stroke-width: 3.5;
-  stroke-linecap: round;
-  opacity: 0;
-}
-
-.sc-dest-node {
-  fill: var(--grey-300);
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: fill 0.4s var(--ease), r 0.4s var(--ease), filter 0.4s var(--ease);
-}
-
-.sc-dest-mfr { r: 13; }
-.sc-dest-dist { r: 7; }
-
-.sc-dest-mfr.active {
-  fill: var(--accent);
-  filter: drop-shadow(0 0 12px rgba(47, 190, 134, 0.65));
-}
-.sc-dest-dist.active {
-  fill: #6FA692;
-  filter: drop-shadow(0 0 5px rgba(111, 166, 146, 0.45));
-}
-
-.sc-dest-label {
-  font-family: var(--font-mono);
-  opacity: 0;
-  transition: opacity 0.4s var(--ease);
-}
-.sc-dest-label.is-visible { opacity: 1; }
-
-.sc-dest-label-mfr {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  fill: var(--accent);
-}
-
-.sc-dest-label-dist {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  fill: var(--grey-300);
-}
-
-.sc-zone-labels text {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  fill: var(--grey-300);
-}
-.sc-zone-label-core {
-  fill: var(--accent) !important;
-  font-weight: 700;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sc-trunk-in,
-  .sc-confluence-glow,
-  .sc-branch-glow,
-  .sc-core,
-  .sc-dest-node,
-  .sc-dest-label {
-    transition: none;
-  }
-  .sc-node-ping { display: none; }
-}
-
-/* Summary caption — fades in once, after the diagram's first full cycle,
-   and stays visible through subsequent loops. */
-
-.supply-chain-caption {
-  margin: var(--space-md) auto 0;
-  max-width: 52ch;
+.agg-header {
+  max-width: 700px;
+  margin: 0 auto var(--space-xl);
   text-align: center;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
-}
-.supply-chain-caption.is-visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
-.scc-text {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.6;
-  letter-spacing: 0.01em;
+.agg-kicker { text-align: center; }
+
+.agg-title {
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+  line-height: 1.25;
+  max-width: none;
+}
+
+.agg-title-accent { color: var(--accent); }
+
+.agg-subtitle {
+  margin: var(--space-sm) auto 0;
+  max-width: 34rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
   color: var(--grey-100);
 }
 
+/* --- Flow: three content columns + two connector columns --- */
+
+.agg-flow {
+  display: grid;
+  grid-template-columns: 1fr 56px 1fr 56px 1.4fr;
+  align-items: center;
+  gap: 0 var(--space-md);
+}
+
+.agg-col { text-align: center; }
+.agg-col-supply { text-align: left; }
+
+.agg-col-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--offwhite);
+  margin-bottom: 0.35rem;
+}
+.agg-col-supply .agg-col-label { text-align: left; }
+.agg-col-label-accent { color: var(--accent); }
+
+.agg-col-sub {
+  font-size: 0.85rem;
+  color: var(--grey-300);
+  margin-bottom: var(--space-md);
+}
+.agg-col-supply .agg-col-sub { text-align: left; }
+
+.agg-dots {
+  width: 100%;
+  max-width: 190px;
+  height: auto;
+  margin: 0 auto;
+}
+.agg-dots circle { fill: var(--grey-300); }
+
+.agg-core-bar {
+  width: 34px;
+  height: 148px;
+  margin: 0 auto;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  box-shadow: 0 0 22px rgba(47, 190, 134, 0.45);
+}
+
+/* Connector SVGs: purely decorative geometry, no text, so they can be any
+   width without anything inside them needing to reflow. */
+
+.agg-connector { width: 100%; height: 220px; display: block; overflow: visible; }
+
+.agg-connector-line {
+  fill: none;
+  stroke: var(--grey-500);
+  stroke-width: 1.2;
+  transition: stroke-dashoffset 1.1s var(--ease);
+}
+
+.agg-connector-line-primary { stroke: var(--accent); stroke-width: 2.2; }
+.agg-connector-line-secondary { stroke: #6FA692; stroke-width: 1.4; opacity: 0.8; }
+
+.agg-pulse {
+  fill: var(--accent);
+  offset-rotate: 0deg;
+  opacity: 0;
+  animation: aggpulse 3.2s linear infinite;
+  animation-play-state: paused;
+}
+.agg-pulse-secondary { fill: #6FA692; }
+.agg-flow.in-view .agg-pulse { animation-play-state: running; }
+
+@keyframes aggpulse {
+  0% { offset-distance: 0%; opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+.agg-connector-mobile { display: none; }
+
+/* --- Supply partners: icon + name + bullet list, twice --- */
+
+.agg-partner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+.agg-partner + .agg-partner { margin-top: var(--space-md); }
+
+.agg-partner-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  color: var(--accent);
+}
+.agg-partner-icon svg { width: 22px; height: 22px; }
+
+.agg-partner-primary .agg-partner-icon {
+  border-color: var(--accent);
+  box-shadow: 0 0 14px rgba(47, 190, 134, 0.3);
+}
+.agg-partner-secondary .agg-partner-icon { color: #6FA692; }
+
+.agg-partner-name {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.agg-partner-secondary .agg-partner-name { color: #6FA692; }
+
+.agg-partner-list li {
+  position: relative;
+  padding-left: 1rem;
+  font-size: 0.92rem;
+  color: var(--grey-100);
+  line-height: 1.7;
+}
+.agg-partner-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--grey-300);
+}
+
+/* --- Advantage strip --- */
+
+.agg-advantage {
+  margin-top: var(--space-2xl);
+  padding: var(--space-lg) var(--space-md);
+  background: var(--charcoal-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+}
+
+.agg-advantage-heading {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-lg);
+}
+
+.agg-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.agg-step {
+  flex: 1;
+  text-align: center;
+}
+
+.agg-step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto var(--space-sm);
+  color: var(--accent);
+}
+.agg-step-icon svg { width: 22px; height: 22px; }
+
+.agg-step-number {
+  display: inline;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-right: 0.3em;
+}
+
+.agg-step-title {
+  display: inline;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--offwhite);
+}
+
+.agg-step-copy {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--grey-100);
+}
+
+.agg-step-connector {
+  flex-shrink: 0;
+  align-self: center;
+  margin-top: 20px;
+  font-family: var(--font-mono);
+  color: var(--grey-500);
+  font-size: 1.1rem;
+}
+
+/* --- Footer --- */
+
+.agg-footer {
+  margin-top: var(--space-2xl);
+  text-align: center;
+}
+
+.agg-divider {
+  width: 140px;
+  height: 1px;
+  margin: 0 auto var(--space-lg);
+  background: var(--line-strong);
+}
+
+.agg-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grey-300);
+  margin-bottom: var(--space-md);
+}
+
+.agg-brand {
+  display: inline-flex;
+  margin: 0 auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .supply-chain-caption { transition: none; }
+  .agg-connector-line { transition: none; }
+  .agg-pulse { display: none; }
+}
+
+/* --- Responsive: stack to one column under 768px --- */
+
+@media (max-width: 768px) {
+  .agg-flow {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg) 0;
+  }
+  .agg-connector { display: none; }
+  .agg-connector-mobile { display: block; }
+
+  /* DOM order stays desktop-first (content columns, then both mobile
+     connectors) so the 5-track desktop grid never has to change; visual
+     order for the stacked mobile layout is set here instead. */
+  .agg-col-clinics { order: 1; }
+  .agg-connector-mobile-1 { order: 2; }
+  .agg-col-core { order: 3; }
+  .agg-connector-mobile-2 { order: 4; }
+  .agg-col-supply { order: 5; }
+
+  .agg-col-supply,
+  .agg-col-supply .agg-col-label,
+  .agg-col-supply .agg-col-sub {
+    text-align: center;
+  }
+
+  .agg-partner { text-align: left; }
+
+  .agg-connector-mobile {
+    width: 1px;
+    height: 40px;
+    margin: 0 auto;
+    background: var(--line-strong);
+    position: relative;
+  }
+  .agg-connector-mobile::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-right: 1px solid var(--grey-300);
+    border-bottom: 1px solid var(--grey-300);
+    rotate: 45deg;
+  }
+
+  .agg-steps {
+    flex-direction: column;
+    gap: 0;
+  }
+  .agg-step {
+    text-align: left;
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .agg-step:first-child { border-top: none; padding-top: 0; }
+  .agg-step-icon { margin: 0 0 var(--space-sm); }
+  .agg-step-connector { display: none; }
+}
+
+@media (max-width: 640px) {
+  .agg-advantage { padding: var(--space-md) var(--space-sm); }
+  .agg-partner-icon { width: 42px; height: 42px; }
+  .agg-partner-icon svg { width: 20px; height: 20px; }
 }
 
 /* ==========================================================================

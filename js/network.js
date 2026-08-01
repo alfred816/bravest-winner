@@ -186,4 +186,47 @@
     }
   }
 
+  /* ======================================================================
+     Aggregation flow diagram (03 — The Network) — draws the decorative
+     connector lines in once the diagram scrolls into view. The continuous
+     pulse travel is handled entirely by CSS, gated on the same ".in-view"
+     class this sets (see .agg-flow.in-view .agg-pulse in styles.css).
+     ====================================================================== */
+
+  var aggFlow = document.getElementById("agg-flow");
+
+  if (aggFlow) {
+    var aggLines = aggFlow.querySelectorAll(".agg-connector-line");
+    aggLines.forEach(function (line) {
+      var length = line.getTotalLength();
+      line.style.strokeDasharray = length;
+      line.style.strokeDashoffset = reduceMotion ? 0 : length;
+    });
+
+    function playAggFlow() {
+      aggFlow.classList.add("in-view");
+      aggLines.forEach(function (line, idx) {
+        setTimeout(function () {
+          line.style.strokeDashoffset = 0;
+        }, idx * 90);
+      });
+    }
+
+    if (reduceMotion) {
+      aggFlow.classList.add("in-view");
+    } else if ("IntersectionObserver" in window) {
+      var aggObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            playAggFlow();
+            aggObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.25 });
+      aggObserver.observe(aggFlow);
+    } else {
+      playAggFlow();
+    }
+  }
+
 })();
